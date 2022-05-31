@@ -5,6 +5,8 @@ const https = require("https");
 
 const app = express();
 
+app.set('view engine','ejs');
+
 app.use(express.static("public"));//help to have local files
 
 app.use(bodyParser.urlencoded({extended :true}));
@@ -12,11 +14,14 @@ app.use(bodyParser.urlencoded({extended :true}));
 app.get("/",function(req,res){
   res.sendFile(__dirname+"/signup.html");
 })
-
+var subscriber ="";
 app.post("/",function(req,res){
   const firstname = req.body.fname;
   const lastname = req.body.lname;
   const email = req.body.email;
+  subscriber = firstname;
+
+  // document.getElementById("finame").innerHTML=firstname;
 
   const data = {
     members: [
@@ -47,7 +52,9 @@ app.post("/failure",function(req,res){
   const request = https.request(URL, options, function(response){
 
     if(response.statusCode==200){
-      res.sendFile(__dirname + "/success.html");
+      // res.sendFile(__dirname + "/success.html",{data:"Sandip"});
+      res.render('list',{user: subscriber});
+
     }
     else{
       res.sendFile(__dirname + "/failure.html");
